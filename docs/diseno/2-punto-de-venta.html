@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="es"><head>
+<meta charset="utf-8">
+<title>Ventas · Punto de venta</title>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0;background:#F5F9FC}
+a{color:#2F80C1}a:hover{color:#236699}
+input:focus{outline:2px solid #2F80C1;outline-offset:-1px;border-color:#2F80C1 !important}
+button:focus-visible,a:focus-visible{outline:2px solid #2F80C1;outline-offset:2px}
+.prod{transition:border-color .12s, box-shadow .12s}
+.prod:hover{border-color:#2F80C1 !important;box-shadow:0 2px 10px rgba(47,128,193,.14) !important}
+.prod:active{background:#E3F0FA !important}
+.btn-ghost:hover{background:#E3F0FA !important}
+.btn-pay:hover{background:#278A5C !important}
+.qty:hover{background:#E3F0FA !important;border-color:#2F80C1 !important}
+.del:hover{background:#FBEAEA !important;color:#D9534F !important}
+</style>
+</helmet>
+<div style="font-family: Inter, system-ui, sans-serif; color: #1F2D3D; background: #F5F9FC; min-height: 100vh; display: flex; flex-direction: column">
+
+<header style="background: #FFFFFF; border-bottom: 1px solid #DCE6EF; padding: 10px 20px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px">
+<div style="display: flex; align-items: center; gap: 14px">
+<span style="font-size: 20px; font-weight: 800; color: #2F80C1; letter-spacing: -0.01em">Ventas</span>
+<span style="width: 1px; height: 24px; background: #DCE6EF"></span>
+<span style="font-size: 16px; font-weight: 600">{{ localName }}</span>
+</div>
+<div style="flex: 1 1 auto"></div>
+<div style="display: flex; align-items: center; gap: 8px; font-size: 14px; color: #627184; font-variant-numeric: tabular-nums">
+<svg aria-hidden="true" width="16" height="16" sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg>
+<span>{{ dateStr }}</span>
+<span style="color: #1F2D3D; font-weight: 600">{{ timeStr }}</span>
+</div>
+<sc-if value="{{ online }}" hint-placeholder-val="{{ true }}">
+<span style="display: inline-flex; align-items: center; gap: 8px; height: 32px; padding: 0 12px; border-radius: 16px; background: #E6F5EE; color: #1E7A50; font-size: 13px; font-weight: 600"><span style="width: 8px; height: 8px; border-radius: 4px; background: #2E9E6A"></span>En línea</span>
+</sc-if>
+<sc-if value="{{ offline }}" hint-placeholder-val="{{ false }}">
+<span style="display: inline-flex; align-items: center; gap: 8px; height: 32px; padding: 0 12px; border-radius: 16px; background: #FFF4DE; color: #8A5A00; font-size: 13px; font-weight: 600"><span style="width: 8px; height: 8px; border-radius: 4px; background: #E0A100"></span>Sin conexión, ventas guardadas en el equipo</span>
+</sc-if>
+<a href="CierreCaja.dc.html" class="btn-ghost" style="height: 40px; padding: 0 16px; border: 1px solid #2F80C1; border-radius: 6px; color: #2F80C1; background: #FFFFFF; font-size: 14px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 8px">
+<svg aria-hidden="true" width="16" height="16" sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>
+Cierre de caja</a>
+</header>
+
+<main style="flex: 1 1 auto; padding: 16px; display: flex; flex-wrap: wrap; gap: 16px; align-items: stretch">
+
+<section aria-label="Productos" style="flex: 65 1 560px; min-width: 0; background: #FFFFFF; border: 1px solid #DCE6EF; border-radius: 8px; box-shadow: 0 1px 2px rgba(31,45,61,0.04); padding: 16px; display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap">
+<div style="position: relative; flex: 1 1 320px">
+<label for="buscar" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Buscar producto</label>
+<svg aria-hidden="true" width="20" height="20" sc-camel-view-box="0 0 24 24" fill="none" stroke="#627184" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; left: 14px; top: 14px"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+<input id="buscar" type="search" value="{{ query }}" sc-camel-on-change="{{ onQuery }}" placeholder="Buscar por nombre o código…" style="width: 100%; height: 48px; padding: 0 14px 0 44px; font-size: 16px; font-family: inherit; color: #1F2D3D; border: 1px solid #DCE6EF; border-radius: 6px; background: #F5F9FC; box-sizing: border-box">
+</div>
+<span style="font-size: 14px; color: #627184">{{ countLabel }}</span>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px">
+<sc-for list="{{ products }}" as="p" hint-placeholder-count="12">
+<button type="button" class="prod" sc-camel-on-click="{{ p.add }}" aria-label="Agregar {{ p.name }} al carrito" style="text-align: left; font-family: inherit; color: #1F2D3D; background: #FFFFFF; border: 1px solid #DCE6EF; border-radius: 8px; padding: 14px; min-height: 104px; cursor: pointer; display: flex; flex-direction: column; gap: 6px; position: relative">
+<span style="font-size: 12px; font-weight: 600; color: #627184; letter-spacing: 0.02em">{{ p.code }}</span>
+<span style="font-size: 16px; font-weight: 600; padding-right: 28px">{{ p.name }}</span>
+<span style="margin-top: auto; font-size: 21px; font-weight: 700; font-variant-numeric: tabular-nums">{{ p.priceStr }}</span>
+<span aria-hidden="true" style="position: absolute; top: 12px; right: 12px; width: 26px; height: 26px; border-radius: 13px; background: #E3F0FA; color: #2F80C1; display: flex; align-items: center; justify-content: center">
+<svg width="14" height="14" sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>
+</span>
+<sc-if value="{{ p.inCart }}" hint-placeholder-val="{{ false }}">
+<span style="position: absolute; bottom: 14px; right: 12px; font-size: 12px; font-weight: 700; color: #2F80C1; background: #E3F0FA; border-radius: 10px; padding: 2px 8px">× {{ p.qty }}</span>
+</sc-if>
+</button>
+</sc-for>
+</div>
+<sc-if value="{{ noResults }}" hint-placeholder-val="{{ false }}">
+<p style="margin: 24px 0; text-align: center; font-size: 15px; color: #627184">No hay productos que coincidan con la búsqueda.</p>
+</sc-if>
+</section>
+
+<aside aria-label="Carrito" style="flex: 35 1 380px; min-width: 0; background: #FFFFFF; border: 1px solid #DCE6EF; border-radius: 8px; box-shadow: 0 1px 2px rgba(31,45,61,0.04); display: flex; flex-direction: column">
+<div style="display: flex; align-items: center; gap: 10px; padding: 14px 16px; border-bottom: 1px solid #DCE6EF">
+<h2 style="margin: 0; font-size: 18px; font-weight: 700">Carrito</h2>
+<span style="font-size: 13px; font-weight: 600; color: #2F80C1; background: #E3F0FA; border-radius: 10px; padding: 2px 9px">{{ itemsLabel }}</span>
+<div style="flex: 1"></div>
+<button type="button" class="btn-ghost" sc-camel-on-click="{{ clearCart }}" style="height: 36px; padding: 0 12px; border: 1px solid #DCE6EF; border-radius: 6px; background: #FFFFFF; color: #627184; font-family: inherit; font-size: 13px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 6px">
+<svg aria-hidden="true" width="14" height="14" sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"></path></svg>
+Vaciar carrito</button>
+</div>
+
+<div style="flex: 1 1 auto; min-height: 120px; max-height: 270px; overflow-y: auto">
+<sc-if value="{{ empty }}" hint-placeholder-val="{{ false }}">
+<div style="padding: 40px 16px; text-align: center; color: #627184; font-size: 15px; display: flex; flex-direction: column; align-items: center; gap: 10px">
+<svg aria-hidden="true" width="32" height="32" sc-camel-view-box="0 0 24 24" fill="none" stroke="#B4C3D1" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.5"></circle><circle cx="18" cy="20" r="1.5"></circle><path d="M2 3h3l2.5 12h12l2-8H6.5"></path></svg>
+El carrito está vacío. Toca un producto para agregarlo.
+</div>
+</sc-if>
+<sc-for list="{{ cartItems }}" as="it" hint-placeholder-count="3">
+<div style="display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-bottom: 1px solid #EDF2F7">
+<div style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 2px">
+<span style="font-size: 15px; font-weight: 600">{{ it.name }}</span>
+<span style="font-size: 13px; color: #627184; font-variant-numeric: tabular-nums">{{ it.priceStr }} c/u</span>
+</div>
+<div style="display: flex; align-items: center; gap: 4px">
+<button type="button" class="qty" sc-camel-on-click="{{ it.dec }}" aria-label="Quitar uno de {{ it.name }}" style="width: 34px; height: 34px; border: 1px solid #DCE6EF; border-radius: 6px; background: #FFFFFF; color: #1F2D3D; cursor: pointer; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="14" height="14" sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M5 12h14"></path></svg></button>
+<span style="min-width: 30px; text-align: center; font-size: 16px; font-weight: 700; font-variant-numeric: tabular-nums">{{ it.qty }}</span>
+<button type="button" class="qty" sc-camel-on-click="{{ it.inc }}" aria-label="Agregar uno de {{ it.name }}" style="width: 34px; height: 34px; border: 1px solid #DCE6EF; border-radius: 6px; background: #FFFFFF; color: #1F2D3D; cursor: pointer; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="14" height="14" sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg></button>
+</div>
+<span style="width: 84px; text-align: right; font-size: 16px; font-weight: 700; font-variant-numeric: tabular-nums">{{ it.subStr }}</span>
+<button type="button" class="del" sc-camel-on-click="{{ it.remove }}" aria-label="Quitar {{ it.name }} del carrito" style="width: 34px; height: 34px; border: 0; border-radius: 6px; background: transparent; color: #627184; cursor: pointer; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="18" height="18" sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14M10 11v6M14 11v6"></path></svg></button>
+</div>
+</sc-for>
+</div>
+
+<div style="margin-top: auto; border-top: 1px solid #DCE6EF; padding: 16px; display: flex; flex-direction: column; gap: 14px; background: #FBFDFE; border-radius: 0 0 8px 8px">
+<div style="display: flex; align-items: baseline; justify-content: space-between">
+<span style="font-size: 15px; font-weight: 700; letter-spacing: 0.06em; color: #627184">TOTAL</span>
+<span style="font-size: 40px; font-weight: 800; letter-spacing: -0.02em; font-variant-numeric: tabular-nums">{{ totalStr }}</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="efectivo" style="font-size: 14px; font-weight: 600">Efectivo recibido</label>
+<div style="position: relative">
+<span aria-hidden="true" style="position: absolute; left: 14px; top: 12px; font-size: 22px; font-weight: 600; color: #627184">$</span>
+<input id="efectivo" type="text" inputmode="numeric" value="{{ cashStr }}" sc-camel-on-change="{{ onCash }}" placeholder="0" style="width: 100%; height: 52px; padding: 0 14px 0 34px; font-size: 22px; font-weight: 700; font-family: inherit; text-align: right; color: #1F2D3D; border: 1px solid #DCE6EF; border-radius: 6px; background: #FFFFFF; box-sizing: border-box; font-variant-numeric: tabular-nums">
+</div>
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px">
+<sc-for list="{{ quick }}" as="q" hint-placeholder-count="4">
+<button type="button" class="btn-ghost" sc-camel-on-click="{{ q.set }}" style="height: 36px; border: 1px solid #DCE6EF; border-radius: 6px; background: #FFFFFF; color: #1F2D3D; font-family: inherit; font-size: 13px; font-weight: 600; cursor: pointer">{{ q.label }}</button>
+</sc-for>
+</div>
+</div>
+<div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; border-radius: 6px; background: {{ changeBg }}">
+<span style="font-size: 15px; font-weight: 600">{{ changeLabel }}</span>
+<span style="font-size: 26px; font-weight: 800; color: {{ changeColor }}; font-variant-numeric: tabular-nums">{{ changeStr }}</span>
+</div>
+<sc-if value="{{ canCharge }}" hint-placeholder-val="{{ true }}">
+<a href="Recibo.dc.html" class="btn-pay" style="height: 60px; border-radius: 8px; background: #2E9E6A; color: #FFFFFF; font-size: 20px; font-weight: 700; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 10px">
+<svg aria-hidden="true" width="22" height="22" sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6"></path><rect x="3" y="9" width="18" height="8" rx="2"></rect><path d="M6 14h12v7H6z"></path></svg>
+Cobrar e imprimir recibo</a>
+</sc-if>
+<sc-if value="{{ cannotCharge }}" hint-placeholder-val="{{ false }}">
+<button type="button" disabled="disabled" style="height: 60px; border: 0; border-radius: 8px; background: #DCE6EF; color: #627184; font-family: inherit; font-size: 20px; font-weight: 700; cursor: not-allowed">Cobrar e imprimir recibo</button>
+</sc-if>
+</div>
+</aside>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script="" data-props="{&quot;local&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Local 1&quot;,&quot;Local 2&quot;],&quot;default&quot;:&quot;Local 1&quot;},&quot;conexion&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;En línea&quot;,&quot;Sin conexión&quot;],&quot;default&quot;:&quot;En línea&quot;},&quot;$preview&quot;:{&quot;width&quot;:1366,&quot;height&quot;:768}}">
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { cart: { B: 2, A: 1, E: 1 }, query: '', cash: 50000, now: new Date() };
+  }
+  componentDidMount() { this.timer = setInterval(() => this.setState({ now: new Date() }), 1000); }
+  componentWillUnmount() { clearInterval(this.timer); }
+  renderVals() {
+    const money = (n) => '$' + String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    const catalog = [
+      ['A', 'P-001', 'Producto A', 5000], ['B', 'P-002', 'Producto B', 12500], ['C', 'P-003', 'Producto C', 8000],
+      ['D', 'P-004', 'Producto D', 3500], ['E', 'P-005', 'Producto E', 15000], ['F', 'P-006', 'Producto F', 2000],
+      ['G', 'P-007', 'Producto G', 7500], ['H', 'P-008', 'Producto H', 22000], ['I', 'P-009', 'Producto I', 4200],
+      ['J', 'P-010', 'Producto J', 9800], ['K', 'P-011', 'Producto K', 1500], ['L', 'P-012', 'Producto L', 18000]
+    ].map(([id, code, name, price]) => ({ id, code, name, price }));
+    const cart = this.state.cart;
+    const setQty = (id, q) => {
+      const next = Object.assign({}, this.state.cart);
+      if (q <= 0) delete next[id]; else next[id] = q;
+      this.setState({ cart: next });
+    };
+    const q = (this.state.query || '').trim().toLowerCase();
+    const products = catalog
+      .filter((p) => !q || p.name.toLowerCase().includes(q) || p.code.toLowerCase().includes(q))
+      .map((p) => Object.assign({}, p, {
+        priceStr: money(p.price),
+        qty: cart[p.id] || 0,
+        inCart: !!cart[p.id],
+        add: () => setQty(p.id, (this.state.cart[p.id] || 0) + 1)
+      }));
+    const cartItems = catalog.filter((p) => cart[p.id]).map((p) => ({
+      name: p.name, qty: cart[p.id], priceStr: money(p.price), subStr: money(p.price * cart[p.id]),
+      inc: () => setQty(p.id, (this.state.cart[p.id] || 0) + 1),
+      dec: () => setQty(p.id, (this.state.cart[p.id] || 0) - 1),
+      remove: () => setQty(p.id, 0)
+    }));
+    const total = catalog.reduce((s, p) => s + (cart[p.id] || 0) * p.price, 0);
+    const units = Object.keys(cart).reduce((s, k) => s + cart[k], 0);
+    const cash = this.state.cash || 0;
+    const change = cash - total;
+    const enough = total > 0 && cash >= total;
+    const short = total > 0 && cash < total;
+    const d = this.state.now;
+    const days = ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'];
+    const months = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+    const h = d.getHours();
+    const pad = (n) => String(n).padStart(2, '0');
+    const online = (this.props.conexion ?? 'En línea') === 'En línea';
+    return {
+      localName: this.props.local ?? 'Local 1',
+      online, offline: !online,
+      dateStr: days[d.getDay()] + ' ' + d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear(),
+      timeStr: ((h % 12) || 12) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds()) + (h < 12 ? ' a. m.' : ' p. m.'),
+      query: this.state.query,
+      onQuery: (e) => this.setState({ query: e.target.value }),
+      products,
+      noResults: products.length === 0,
+      countLabel: products.length + (products.length === 1 ? ' producto' : ' productos'),
+      cartItems,
+      empty: cartItems.length === 0,
+      itemsLabel: units + (units === 1 ? ' artículo' : ' artículos'),
+      clearCart: () => this.setState({ cart: {}, cash: 0 }),
+      totalStr: money(total),
+      cashStr: cash ? String(cash).replace(/\B(?=(\d{3})+(?!\d))/g, '.') : '',
+      onCash: (e) => this.setState({ cash: parseInt(String(e.target.value).replace(/\D/g, ''), 10) || 0 }),
+      quick: [
+        { label: 'Exacto', set: () => this.setState({ cash: total }) },
+        { label: '$20.000', set: () => this.setState({ cash: 20000 }) },
+        { label: '$50.000', set: () => this.setState({ cash: 50000 }) },
+        { label: '$100.000', set: () => this.setState({ cash: 100000 }) }
+      ],
+      changeLabel: short ? 'Falta' : 'Cambio',
+      changeStr: short ? money(-change) : money(total > 0 ? change : 0),
+      changeColor: short ? '#C0392B' : '#1E7A50',
+      changeBg: short ? '#FBEAEA' : '#E6F5EE',
+      canCharge: enough,
+      cannotCharge: !enough
+    };
+  }
+}
+</script>
+
+
+</body></html>

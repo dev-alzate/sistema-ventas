@@ -53,9 +53,12 @@ utils/        formato de moneda, generar PDF
 ## Diseño
 Tonos claros de azul y blanco, estilo de software de facturación tradicional, nada futurista.
 - Fondo #F5F9FC · tarjetas #FFFFFF · azul principal #2F80C1 · azul claro #E3F0FA
-- Texto #1F2D3D / secundario #6B7A8C · bordes #DCE6EF · verde para cobrar #2E9E6A · rojo para eliminar #D9534F
-- Tipografía Inter; esquinas de 6-8px; botones grandes.
-- El diseño de referencia de Claude Design está en: (pegar aquí el enlace o guardar capturas en `docs/diseno/`)
+- Texto #1F2D3D / secundario #627184 · bordes #DCE6EF · verde para cobrar #2E9E6A · rojo para eliminar #D9534F
+- Tipografía Inter (Roboto Mono en el recibo), instaladas con @fontsource para que funcionen sin internet; esquinas de 6-8px; botones grandes.
+- **Diseño de referencia** (exportado de Claude Design): `docs/diseno/1-login.html` … `6-admin-productos.html`. Es solo referencia visual: estilos en línea y datos falsos; no se importa en la app.
+- **Tokens** en `src/index.css` (`@theme`): usar las clases del tema (`bg-primario`, `text-texto-sec`, `bg-exito-fondo`, `shadow-tarjeta`…), no colores hex sueltos.
+- **Componentes base** en `src/components/`: `Boton` (primario, cobrar, peligro, contorno, neutro; sm/md/lg/xl), `Campo`, `Tarjeta`, `Insignia`, `Iconos`. Formato de moneda: `formatearPesos()` en `src/utils/formato.js`.
+- N.º de venta en pantalla y recibo: `L{local}-{numero con 6 dígitos}`, p. ej. `L1-000124`.
 
 Pantallas: Login · Punto de venta (productos 65% / carrito 35%, indicador de conexión, botón de cierre de caja) · Vista previa del recibo · Cierre de caja · Admin: ventas (pestañas Local 1 / Local 2, resumen, filtro por fecha, tabla con detalle, exportar y borrar) · Admin: productos (tabla, agregar/editar, importar Excel).
 
@@ -66,7 +69,11 @@ Pantallas: Login · Punto de venta (productos 65% / carrito 35%, indicador de co
    - [x] 2.2 Usuarios: registro público desactivado, 3 usuarios en Authentication y `supabase/02_perfiles.sql`
    - [x] 2.3 Políticas RLS: `supabase/03_rls.sql` (funciones `privado.es_admin()` y `privado.mi_local()`)
    - [x] 2.4 Verificado con `supabase/04_pruebas_rls.sql` (27 pruebas, todas ✅)
-3. [ ] Login y redirección por rol
+3. [x] Login y redirección por rol
+   - [x] Tema y componentes base a partir de `docs/diseno/`
+   - [x] Sesión y perfil (`ProveedorAuth`, `useAuth`, `lib/auth.js`; el perfil se guarda en el equipo para abrir sin internet)
+   - [x] Login con usuario (`local1` → `local1@sistema-ventas.local`), rutas `/login`, `/local`, `/admin` protegidas por rol
+   - [x] Probado con los 3 usuarios reales
 4. [ ] Punto de venta: productos de prueba, carrito y cobro
 5. [ ] Recibo PDF
 6. [ ] Guardado sin internet y sincronización

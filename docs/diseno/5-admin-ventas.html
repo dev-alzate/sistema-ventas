@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es"><head>
+<meta charset="utf-8">
+<title>Ventas · Admin · Ventas</title>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0;background:#F5F9FC}
+a{color:#2F80C1}a:hover{color:#236699}
+input:focus{outline:2px solid #2F80C1;outline-offset:-1px;border-color:#2F80C1 !important}
+button:focus-visible,a:focus-visible{outline:2px solid #2F80C1;outline-offset:2px}
+.btn-ghost:hover{background:#E3F0FA !important}
+.btn-danger:hover{background:#C2423E !important}
+.nav:hover{background:#F0F6FB !important}
+.row:hover{background:#F5F9FC !important}
+</style>
+</helmet>
+<div style="font-family: Inter, system-ui, sans-serif; color: #1F2D3D; background: #F5F9FC; min-height: 100vh; display: flex; flex-wrap: wrap; position: relative">
+
+<nav aria-label="Menú principal" style="flex: 1 1 220px; max-width: 100%; background: #FFFFFF; border-right: 1px solid #DCE6EF; padding: 18px 14px; box-sizing: border-box; display: flex; flex-direction: column; gap: 6px">
+<div style="display: flex; align-items: center; gap: 10px; padding: 0 8px 18px">
+<span style="font-size: 20px; font-weight: 800; color: #2F80C1; letter-spacing: -0.01em">Ventas</span>
+<span style="font-size: 12px; font-weight: 600; color: #627184; background: #F5F9FC; border: 1px solid #DCE6EF; border-radius: 10px; padding: 1px 8px">Admin</span>
+</div>
+<a href="AdminVentas.dc.html" aria-current="page" style="height: 44px; padding: 0 12px; border-radius: 6px; background: #E3F0FA; color: #2F80C1; font-size: 15px; font-weight: 600; text-decoration: none; display: flex; align-items: center; gap: 10px">
+<svg aria-hidden="true" width="18" height="18" sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h14v18l-3-2-2 2-2-2-2 2-2-2-3 2z"></path><path d="M9 8h6M9 12h6"></path></svg>
+Ventas</a>
+<a href="AdminProductos.dc.html" class="nav" style="height: 44px; padding: 0 12px; border-radius: 6px; color: #1F2D3D; font-size: 15px; font-weight: 500; text-decoration: none; display: flex; align-items: center; gap: 10px">
+<svg aria-hidden="true" width="18" height="18" sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8 12 3 3 8v8l9 5 9-5z"></path><path d="M3 8l9 5 9-5M12 13v8"></path></svg>
+Productos</a>
+<div style="flex: 1; min-height: 24px"></div>
+<a href="Main.dc.html" class="nav" style="height: 40px; padding: 0 12px; border-radius: 6px; color: #627184; font-size: 14px; font-weight: 500; text-decoration: none; display: flex; align-items: center; gap: 10px">
+<svg aria-hidden="true" width="16" height="16" sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"></path></svg>
+Cerrar sesión</a>
+</nav>
+
+<main style="flex: 999 1 560px; min-width: 0; padding: 24px 28px; box-sizing: border-box; display: flex; flex-direction: column; gap: 20px">
+<div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap">
+<h1 style="margin: 0; font-size: 26px; font-weight: 700; flex: 1 1 auto">Ventas</h1>
+<button type="button" class="btn-ghost" style="height: 42px; padding: 0 16px; border: 1px solid #2F80C1; border-radius: 6px; background: #FFFFFF; color: #2F80C1; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px">
+<svg aria-hidden="true" width="16" height="16" sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"></path></svg>
+Exportar a Excel</button>
+<button type="button" class="btn-danger" sc-camel-on-click="{{ openDelete }}" style="height: 42px; padding: 0 16px; border: 0; border-radius: 6px; background: #D9534F; color: #FFFFFF; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px">
+<svg aria-hidden="true" width="16" height="16" sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"></path></svg>
+Borrar historial</button>
+</div>
+
+<div style="display: flex; align-items: flex-end; gap: 16px; flex-wrap: wrap; border-bottom: 1px solid #DCE6EF">
+<div role="tablist" aria-label="Local" style="display: flex; gap: 4px; flex: 1 1 auto">
+<sc-for list="{{ tabs }}" as="t" hint-placeholder-count="2">
+<button type="button" role="tab" aria-selected="{{ t.selected }}" sc-camel-on-click="{{ t.pick }}" style="height: 44px; padding: 0 20px; border: 0; border-bottom: 3px solid {{ t.line }}; margin-bottom: -1px; background: transparent; color: {{ t.color }}; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer">{{ t.label }}</button>
+</sc-for>
+</div>
+<div style="display: flex; align-items: center; gap: 10px; padding-bottom: 10px">
+<label for="fecha" style="font-size: 14px; font-weight: 600; color: #627184">Fecha</label>
+<input id="fecha" type="date" value="2026-11-24" style="height: 40px; padding: 0 12px; font-size: 14px; font-family: inherit; color: #1F2D3D; border: 1px solid #DCE6EF; border-radius: 6px; background: #FFFFFF">
+</div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px">
+<div style="background: #FFFFFF; border: 1px solid #DCE6EF; border-radius: 8px; box-shadow: 0 1px 2px rgba(31,45,61,0.04); padding: 18px 20px; display: flex; flex-direction: column; gap: 6px">
+<span style="font-size: 14px; font-weight: 600; color: #627184">Total del día</span>
+<span style="font-size: 32px; font-weight: 800; letter-spacing: -0.02em; font-variant-numeric: tabular-nums">{{ totalStr }}</span>
+</div>
+<div style="background: #FFFFFF; border: 1px solid #DCE6EF; border-radius: 8px; box-shadow: 0 1px 2px rgba(31,45,61,0.04); padding: 18px 20px; display: flex; flex-direction: column; gap: 6px">
+<span style="font-size: 14px; font-weight: 600; color: #627184">Número de ventas</span>
+<span style="font-size: 32px; font-weight: 800; font-variant-numeric: tabular-nums">{{ count }}</span>
+</div>
+<div style="background: #FFFFFF; border: 1px solid #DCE6EF; border-radius: 8px; box-shadow: 0 1px 2px rgba(31,45,61,0.04); padding: 18px 20px; display: flex; flex-direction: column; gap: 10px">
+<span style="font-size: 14px; font-weight: 600; color: #627184">Estado del cierre</span>
+<div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap">
+<span style="display: inline-flex; align-items: center; gap: 8px; height: 32px; padding: 0 14px; border-radius: 16px; background: {{ closeBg }}; color: {{ closeColor }}; font-size: 15px; font-weight: 700"><span style="width: 8px; height: 8px; border-radius: 4px; background: {{ closeDot }}"></span>{{ closeLabel }}</span>
+<span style="font-size: 13px; color: #627184">{{ closeNote }}</span>
+</div>
+</div>
+</div>
+
+<section aria-label="Ventas del día" style="background: #FFFFFF; border: 1px solid #DCE6EF; border-radius: 8px; box-shadow: 0 1px 2px rgba(31,45,61,0.04); overflow-x: auto">
+<div style="min-width: 560px">
+<div style="display: grid; grid-template-columns: 48px 1.3fr 1fr 1fr 1fr; align-items: center; height: 44px; padding: 0 16px; background: #F5F9FC; border-bottom: 1px solid #DCE6EF; font-size: 13px; font-weight: 700; color: #627184; letter-spacing: 0.02em">
+<span></span><span>N.º DE VENTA</span><span>HORA</span><span style="text-align: right">ARTÍCULOS</span><span style="text-align: right">TOTAL</span>
+</div>
+<sc-for list="{{ sales }}" as="s" hint-placeholder-count="8">
+<div style="border-bottom: 1px solid #EDF2F7">
+<button type="button" class="row" sc-camel-on-click="{{ s.toggle }}" aria-expanded="{{ s.open }}" style="width: 100%; display: grid; grid-template-columns: 48px 1.3fr 1fr 1fr 1fr; align-items: center; height: 52px; padding: 0 16px; border: 0; background: {{ s.rowBg }}; color: #1F2D3D; font-family: inherit; font-size: 15px; text-align: left; cursor: pointer">
+<span style="width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: #2F80C1; transform: {{ s.rot }}"><svg aria-hidden="true" width="16" height="16" sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"></path></svg></span>
+<span style="font-weight: 600">{{ s.no }}</span>
+<span style="color: #3D4B5C; font-variant-numeric: tabular-nums">{{ s.time }}</span>
+<span style="text-align: right; font-variant-numeric: tabular-nums">{{ s.units }}</span>
+<span style="text-align: right; font-weight: 700; font-variant-numeric: tabular-nums">{{ s.totalStr }}</span>
+</button>
+<sc-if value="{{ s.open }}" hint-placeholder-val="{{ false }}">
+<div style="background: #F8FBFE; padding: 12px 16px 16px 64px; display: flex; gap: 32px; flex-wrap: wrap; border-top: 1px solid #E3F0FA">
+<div style="flex: 1 1 320px; display: flex; flex-direction: column">
+<div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; padding: 6px 0; font-size: 12px; font-weight: 700; color: #627184; letter-spacing: 0.02em; border-bottom: 1px solid #DCE6EF">
+<span>PRODUCTO</span><span style="text-align: right">CANT.</span><span style="text-align: right">PRECIO</span><span style="text-align: right">SUBTOTAL</span>
+</div>
+<sc-for list="{{ s.items }}" as="it" hint-placeholder-count="2">
+<div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; padding: 7px 0; font-size: 14px; font-variant-numeric: tabular-nums; border-bottom: 1px solid #EDF2F7">
+<span>{{ it.name }}</span><span style="text-align: right">{{ it.qty }}</span><span style="text-align: right">{{ it.priceStr }}</span><span style="text-align: right; font-weight: 600">{{ it.subStr }}</span>
+</div>
+</sc-for>
+</div>
+<div style="flex: 0 1 220px; display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-variant-numeric: tabular-nums">
+<div style="display: flex; justify-content: space-between"><span style="color: #627184">Efectivo recibido</span><span>{{ s.cashStr }}</span></div>
+<div style="display: flex; justify-content: space-between"><span style="color: #627184">Cambio</span><span>{{ s.changeStr }}</span></div>
+<div style="display: flex; justify-content: space-between; font-weight: 700; padding-top: 6px; border-top: 1px solid #DCE6EF"><span>Total</span><span>{{ s.totalStr }}</span></div>
+</div>
+</div>
+</sc-if>
+</div>
+</sc-for>
+</div>
+</section>
+</main>
+
+<sc-if value="{{ deleteOpen }}" hint-placeholder-val="{{ false }}">
+<div style="position: absolute; inset: 0; background: rgba(31,45,61,0.45); display: flex; align-items: center; justify-content: center; padding: 16px">
+<div role="alertdialog" aria-modal="true" aria-labelledby="del-title" style="width: 100%; max-width: 460px; background: #FFFFFF; border-radius: 8px; box-shadow: 0 12px 40px rgba(31,45,61,0.25); padding: 24px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; align-items: center; gap: 12px">
+<span style="width: 40px; height: 40px; border-radius: 20px; background: #FBEAEA; color: #D9534F; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="20" height="20" sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2 20h20z"></path><path d="M12 10v4M12 17h.01"></path></svg></span>
+<h2 id="del-title" style="margin: 0; font-size: 19px; font-weight: 700">¿Borrar historial de {{ localLabel }}?</h2>
+</div>
+<div style="display: flex; align-items: flex-start; gap: 10px; padding: 12px 14px; border-radius: 6px; background: #E3F0FA; color: #1D4F78; font-size: 14px; line-height: 1.5">
+<svg aria-hidden="true" width="18" height="18" sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex: none; margin-top: 2px"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"></path></svg>
+<span>Primero se descargará un <strong>respaldo en Excel</strong> con todas las ventas de {{ localLabel }}. Después se borrará el historial.</span>
+</div>
+<p style="margin: 0; font-size: 15px; line-height: 1.5; color: #3D4B5C">Esta acción no se puede deshacer. Guarda el archivo de respaldo en un lugar seguro.</p>
+<div style="display: flex; justify-content: flex-end; gap: 10px; flex-wrap: wrap">
+<button type="button" class="btn-ghost" sc-camel-on-click="{{ closeDelete }}" style="height: 46px; padding: 0 18px; border: 1px solid #DCE6EF; border-radius: 6px; background: #FFFFFF; color: #1F2D3D; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Cancelar</button>
+<button type="button" class="btn-danger" sc-camel-on-click="{{ closeDelete }}" style="height: 46px; padding: 0 18px; border: 0; border-radius: 6px; background: #D9534F; color: #FFFFFF; font-family: inherit; font-size: 15px; font-weight: 700; cursor: pointer">Descargar respaldo y borrar</button>
+</div>
+</div>
+</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script="" data-props="{&quot;mostrarDialogoBorrar&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false},&quot;$preview&quot;:{&quot;width&quot;:1366,&quot;height&quot;:900}}">
+class Component extends DCLogic {
+  renderVals() {
+    const money = (n) => '$' + String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    const P = { A: ['Producto A', 5000], B: ['Producto B', 12500], C: ['Producto C', 8000], D: ['Producto D', 3500], E: ['Producto E', 15000], F: ['Producto F', 2000], G: ['Producto G', 7500], H: ['Producto H', 22000], J: ['Producto J', 9800], L: ['Producto L', 18000] };
+    const data = {
+      l1: { prefix: 'L1', closed: true, note: 'Cerrado a las 9:31 p. m.', sales: [
+        ['000124', '9:28 p. m.', [['A', 1], ['B', 2], ['E', 1]], 50000],
+        ['000123', '8:52 p. m.', [['C', 2], ['F', 3]], 25000],
+        ['000122', '7:40 p. m.', [['H', 1]], 50000],
+        ['000121', '6:15 p. m.', [['B', 1], ['D', 2]], 20000],
+        ['000120', '4:03 p. m.', [['G', 2], ['A', 1]], 20000],
+        ['000119', '1:47 p. m.', [['L', 1], ['J', 1]], 30000],
+        ['000118', '11:20 a. m.', [['E', 2]], 30000],
+        ['000117', '8:04 a. m.', [['A', 3], ['F', 1]], 20000]
+      ] },
+      l2: { prefix: 'L2', closed: false, note: 'El local aún no ha cerrado caja', sales: [
+        ['000088', '9:12 p. m.', [['B', 1], ['C', 1]], 50000],
+        ['000087', '7:58 p. m.', [['H', 2]], 50000],
+        ['000086', '5:30 p. m.', [['D', 4]], 15000],
+        ['000085', '2:10 p. m.', [['E', 1], ['A', 2]], 25000],
+        ['000084', '10:45 a. m.', [['J', 1]], 10000],
+        ['000083', '8:20 a. m.', [['G', 1], ['F', 2]], 20000]
+      ] }
+    };
+    const tab = this.state.tab || 'l1';
+    const d = data[tab];
+    const openId = this.state.open === undefined ? d.prefix + '-' + d.sales[0][0] : this.state.open;
+    let sum = 0;
+    const sales = d.sales.map(([n, time, lines, cash]) => {
+      const id = d.prefix + '-' + n;
+      const items = lines.map(([k, q]) => ({ name: P[k][0], qty: q, priceStr: money(P[k][1]), subStr: money(P[k][1] * q) }));
+      const total = lines.reduce((s, [k, q]) => s + P[k][1] * q, 0);
+      const units = lines.reduce((s, l) => s + l[1], 0);
+      sum += total;
+      const open = openId === id;
+      return {
+        no: id, time, units, items, open,
+        totalStr: money(total), cashStr: money(cash), changeStr: money(cash - total),
+        rowBg: open ? '#E3F0FA' : '#FFFFFF',
+        rot: open ? 'rotate(90deg)' : 'none',
+        toggle: () => this.setState({ open: open ? null : id })
+      };
+    });
+    const deleteOpen = this.state.del ?? (this.props.mostrarDialogoBorrar ?? false);
+    return {
+      tabs: [['l1', 'Local 1'], ['l2', 'Local 2']].map(([k, label]) => ({
+        label, selected: tab === k ? 'true' : 'false',
+        line: tab === k ? '#2F80C1' : 'transparent',
+        color: tab === k ? '#2F80C1' : '#627184',
+        pick: () => this.setState({ tab: k, open: undefined })
+      })),
+      localLabel: tab === 'l1' ? 'Local 1' : 'Local 2',
+      sales,
+      count: sales.length,
+      totalStr: money(sum),
+      closeLabel: d.closed ? 'Cerrado' : 'Pendiente',
+      closeNote: d.note,
+      closeBg: d.closed ? '#E6F5EE' : '#FFF4DE',
+      closeColor: d.closed ? '#1E7A50' : '#8A5A00',
+      closeDot: d.closed ? '#2E9E6A' : '#E0A100',
+      deleteOpen,
+      openDelete: () => this.setState({ del: true }),
+      closeDelete: () => this.setState({ del: false })
+    };
+  }
+}
+</script>
+
+
+</body></html>

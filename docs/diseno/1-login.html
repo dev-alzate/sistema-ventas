@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es"><head>
+<meta charset="utf-8">
+<title>Ventas · Ingresar</title>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0;background:#F5F9FC}
+a{color:#2F80C1}a:hover{color:#236699}
+input:focus{outline:2px solid #2F80C1;outline-offset:-1px;border-color:#2F80C1 !important}
+button:focus-visible,a:focus-visible{outline:2px solid #2F80C1;outline-offset:2px}
+.btn-primary:hover{background:#286FA8 !important}
+</style>
+</helmet>
+<div style="font-family: Inter, system-ui, sans-serif; color: #1F2D3D; background: #F5F9FC; min-height: 100vh; box-sizing: border-box; padding: 32px 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 24px">
+<main style="width: 100%; max-width: 400px; background: #FFFFFF; border: 1px solid #DCE6EF; border-radius: 8px; box-shadow: 0 1px 3px rgba(31,45,61,0.06), 0 8px 24px rgba(31,45,61,0.05); box-sizing: border-box; padding: 40px 36px 32px; display: flex; flex-direction: column; gap: 28px">
+<div style="display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center">
+<div style="width: 52px; height: 52px; border-radius: 8px; background: #E3F0FA; display: flex; align-items: center; justify-content: center">
+<svg aria-hidden="true" width="26" height="26" sc-camel-view-box="0 0 24 24" fill="none" stroke="#2F80C1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h14v18l-3-2-2 2-2-2-2 2-2-2-3 2z"></path><path d="M9 8h6"></path><path d="M9 12h6"></path></svg>
+</div>
+<h1 style="margin: 0; font-size: 26px; font-weight: 700; letter-spacing: -0.01em">Ventas</h1>
+<p style="margin: 0; font-size: 15px; color: #627184">Ingresa con tu usuario para continuar</p>
+</div>
+<form style="display: flex; flex-direction: column; gap: 18px" sc-camel-on-submit="{{ onSubmit }}">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="usuario" style="font-size: 14px; font-weight: 600">Usuario</label>
+<input id="usuario" type="text" autocomplete="username" placeholder="Ej. local1" style="height: 48px; padding: 0 14px; font-size: 16px; font-family: inherit; color: #1F2D3D; border: 1px solid #DCE6EF; border-radius: 6px; background: #FFFFFF; box-sizing: border-box">
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="clave" style="font-size: 14px; font-weight: 600">Contraseña</label>
+<div style="position: relative">
+<input id="clave" type="{{ pwType }}" autocomplete="current-password" placeholder="••••••••" style="width: 100%; height: 48px; padding: 0 52px 0 14px; font-size: 16px; font-family: inherit; color: #1F2D3D; border: 1px solid #DCE6EF; border-radius: 6px; background: #FFFFFF; box-sizing: border-box">
+<button type="button" sc-camel-on-click="{{ togglePw }}" aria-label="{{ pwLabel }}" style="position: absolute; right: 4px; top: 4px; width: 40px; height: 40px; border: 0; background: transparent; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #627184">
+<svg aria-hidden="true" width="20" height="20" sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+</button>
+</div>
+</div>
+<a href="PuntoDeVenta.dc.html" class="btn-primary" style="margin-top: 6px; height: 50px; border-radius: 6px; background: #2F80C1; color: #FFFFFF; font-size: 17px; font-weight: 700; text-decoration: none; display: flex; align-items: center; justify-content: center">Ingresar</a>
+</form>
+</main>
+<p style="margin: 0; font-size: 13px; color: #627184">Usuarios: Admin · Local 1 · Local 2</p>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script="" data-props="{&quot;$preview&quot;:{&quot;width&quot;:1366,&quot;height&quot;:768}}">
+class Component extends DCLogic {
+  renderVals() {
+    const show = !!this.state.showPw;
+    return {
+      pwType: show ? 'text' : 'password',
+      pwLabel: show ? 'Ocultar contraseña' : 'Mostrar contraseña',
+      togglePw: () => this.setState({ showPw: !show }),
+      onSubmit: (e) => { e.preventDefault(); }
+    };
+  }
+}
+</script>
+
+
+</body></html>

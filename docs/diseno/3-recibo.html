@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es"><head>
+<meta charset="utf-8">
+<title>Ventas · Recibo</title>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0;background:#F5F9FC}
+a{color:#2F80C1}a:hover{color:#236699}
+button:focus-visible,a:focus-visible{outline:2px solid #2F80C1;outline-offset:2px}
+.btn-ghost:hover{background:#E3F0FA !important}
+.btn-primary:hover{background:#286FA8 !important}
+</style>
+</helmet>
+<div style="font-family: Inter, system-ui, sans-serif; color: #1F2D3D; min-height: 100vh; background: rgba(31,45,61,0.45); box-sizing: border-box; padding: 24px 16px; display: flex; align-items: center; justify-content: center">
+<div role="dialog" aria-modal="true" aria-labelledby="rec-title" style="width: 100%; max-width: 440px; background: #FFFFFF; border-radius: 8px; box-shadow: 0 12px 40px rgba(31,45,61,0.25); display: flex; flex-direction: column; overflow: hidden">
+<div style="display: flex; align-items: center; gap: 12px; padding: 16px 20px; border-bottom: 1px solid #DCE6EF">
+<span style="width: 32px; height: 32px; border-radius: 16px; background: #E6F5EE; color: #2E9E6A; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="18" height="18" sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"></path></svg></span>
+<div style="flex: 1; display: flex; flex-direction: column; gap: 2px">
+<h2 id="rec-title" style="margin: 0; font-size: 17px; font-weight: 700">Venta registrada</h2>
+<span style="font-size: 13px; color: #627184">Vista previa del recibo · 80 mm</span>
+</div>
+<a href="PuntoDeVenta.dc.html" aria-label="Cerrar" class="btn-ghost" style="width: 36px; height: 36px; border-radius: 6px; color: #627184; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="18" height="18" sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"></path></svg></a>
+</div>
+
+<div style="background: #EEF3F8; padding: 20px; display: flex; justify-content: center; max-height: 470px; overflow-y: auto">
+<div style="width: 302px; background: #FFFFFF; box-shadow: 0 1px 4px rgba(31,45,61,0.12); padding: 20px 18px 24px; box-sizing: border-box; font-family: 'Roboto Mono', ui-monospace, monospace; font-size: 12px; line-height: 1.55; color: #1F2D3D; display: flex; flex-direction: column; gap: 10px">
+<div style="text-align: center; display: flex; flex-direction: column; gap: 2px">
+<span style="font-size: 14px; font-weight: 700; letter-spacing: 0.08em">RECIBO DE VENTA</span>
+<span>Local 1</span>
+</div>
+<div style="border-top: 1px dashed #9AA8B6"></div>
+<div style="display: flex; flex-direction: column">
+<div style="display: flex; justify-content: space-between"><span>Venta n.º</span><span style="font-weight: 700">L1-000124</span></div>
+<div style="display: flex; justify-content: space-between"><span>Fecha</span><span>24/11/2026</span></div>
+<div style="display: flex; justify-content: space-between"><span>Hora</span><span>21:32:08</span></div>
+</div>
+<div style="border-top: 1px dashed #9AA8B6"></div>
+<div style="display: flex; flex-direction: column; gap: 8px">
+<sc-for list="{{ items }}" as="it" hint-placeholder-count="3">
+<div style="display: flex; flex-direction: column">
+<span>{{ it.name }}</span>
+<div style="display: flex; justify-content: space-between"><span style="color: #4A5868">{{ it.qty }} × {{ it.priceStr }}</span><span>{{ it.subStr }}</span></div>
+</div>
+</sc-for>
+</div>
+<div style="border-top: 1px dashed #9AA8B6"></div>
+<div style="display: flex; justify-content: space-between; font-size: 16px; font-weight: 700"><span>TOTAL</span><span>{{ totalStr }}</span></div>
+<div style="display: flex; flex-direction: column">
+<div style="display: flex; justify-content: space-between"><span>Efectivo recibido</span><span>{{ cashStr }}</span></div>
+<div style="display: flex; justify-content: space-between; font-weight: 700"><span>Cambio</span><span>{{ changeStr }}</span></div>
+</div>
+<div style="border-top: 1px dashed #9AA8B6"></div>
+<span style="text-align: center">{{ unitsLabel }}</span>
+<span style="text-align: center">¡Gracias por su compra!</span>
+</div>
+</div>
+
+<div style="display: flex; gap: 10px; padding: 16px 20px; border-top: 1px solid #DCE6EF">
+<button type="button" class="btn-ghost" style="flex: 1; height: 48px; border: 1px solid #2F80C1; border-radius: 6px; background: #FFFFFF; color: #2F80C1; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px">
+<svg aria-hidden="true" width="18" height="18" sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"></path></svg>
+Descargar PDF</button>
+<a href="PuntoDeVenta.dc.html" class="btn-primary" style="flex: 1; height: 48px; border-radius: 6px; background: #2F80C1; color: #FFFFFF; font-size: 15px; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 8px">
+<svg aria-hidden="true" width="18" height="18" sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>
+Nueva venta</a>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script="" data-props="{&quot;$preview&quot;:{&quot;width&quot;:1366,&quot;height&quot;:768}}">
+class Component extends DCLogic {
+  renderVals() {
+    const money = (n) => '$' + String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    const raw = [['Producto A', 1, 5000], ['Producto B', 2, 12500], ['Producto E', 1, 15000]];
+    const total = raw.reduce((s, r) => s + r[1] * r[2], 0);
+    const units = raw.reduce((s, r) => s + r[1], 0);
+    const cash = 50000;
+    return {
+      items: raw.map(([name, qty, price]) => ({ name, qty, priceStr: money(price), subStr: money(qty * price) })),
+      totalStr: money(total),
+      cashStr: money(cash),
+      changeStr: money(cash - total),
+      unitsLabel: units + ' artículos'
+    };
+  }
+}
+</script>
+
+
+</body></html>
