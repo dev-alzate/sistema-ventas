@@ -1,49 +1,46 @@
 import { useEffect, useState } from 'react'
+import { useLiveQuery } from 'dexie-react-hooks'
+import { db } from '../lib/db'
 import { supabase } from '../lib/supabase'
 
-// Copia de los productos en el equipo, para vender sin internet.
-// (En el paso 6 se pasa a Dexie junto con las ventas.)
-const CLAVE = 'productos'
-
-function leerGuardados() {
-  try {
-    return JSON.parse(localStorage.getItem(CLAVE))
-  } catch {
-    return null
-  }
+function ordenar(a, b) {
+  const porCodigo = (a.codigo ?? '￿').localeCompare(b.codigo ?? '￿')
+  return porCodigo || a.nombre.localeCompare(b.nombre)
 }
 
-// Productos activos. El RLS ya oculta los inactivos a los locales;
-// el filtro .eq('activo', true) es para que el admin tampoco los vea aquí.
+// Productos activos. Se muestran desde la copia del equipo (Dexie) y se
+// actualizan desde Supabase cuando hay internet.
+// El RLS ya oculta los inactivos a los locales; .eq('activo', true) es para el admin.
 export function useProductos() {
-  const [estado, setEstado] = useState(() => ({ productos: leerGuardados(), error: null }))
+  const guardados = useLiveQuery(() => db.productos.toArray(), [])
+  const [remoto, setRemoto] = useState({ respondio: false, error: null })
 
   useEffect(() => {
+    localStorage.removeItem('productos') // copia antigua del paso 4
     let cancelado = false
     supabase
       .from('productos')
       .select('id, codigo, nombre, precio')
       .eq('activo', true)
-      .order('codigo', { nullsFirst: false })
-      .order('nombre')
-      .then(({ data, error }) => {
-        if (cancelado) return
+      .then(async ({ data, error }) => {
         if (data) {
-          localStorage.setItem(CLAVE, JSON.stringify(data))
-          setEstado({ productos: data, error: null })
-        } else {
-          // Sin internet: se sigue usando la copia guardada
-          setEstado((anterior) => ({ ...anterior, error }))
+          // Reemplaza la copia completa: así desaparecen los productos desactivados
+          await db.transaction('rw', db.productos, async () => {
+            await db.productos.clear()
+            await db.productos.bulkPut(data)
+          })
         }
+        if (!cancelado) setRemoto({ respondio: true, error })
       })
     return () => {
       cancelado = true
     }
   }, [])
 
+  const productos = (guardados ?? []).slice().sort(ordenar)
   return {
-    productos: estado.productos ?? [],
-    cargando: estado.productos === null && !estado.error,
-    error: estado.error,
+    productos,
+    cargando: guardados === undefined || (productos.length === 0 && !remoto.respondio),
+    error: remoto.error,
   }
 }

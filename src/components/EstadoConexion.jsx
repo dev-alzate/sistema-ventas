@@ -1,11 +1,18 @@
 import { useEnLinea } from '../hooks/useEnLinea'
 import Insignia from './Insignia'
 
-export default function EstadoConexion() {
+// Estado de la conexión y de las ventas que faltan por enviar a Supabase.
+export default function EstadoConexion({ porEnviar = 0 }) {
   const enLinea = useEnLinea()
-  return enLinea ? (
-    <Insignia tono="exito">En línea</Insignia>
-  ) : (
-    <Insignia tono="alerta">Sin conexión</Insignia>
-  )
+  const ventas = `${porEnviar} ${porEnviar === 1 ? 'venta' : 'ventas'}`
+
+  if (!enLinea) {
+    return (
+      <Insignia tono="alerta">
+        {porEnviar > 0 ? `Sin conexión · ${ventas} guardadas en el equipo` : 'Sin conexión'}
+      </Insignia>
+    )
+  }
+  if (porEnviar > 0) return <Insignia tono="info">En línea · enviando {ventas}</Insignia>
+  return <Insignia tono="exito">En línea</Insignia>
 }

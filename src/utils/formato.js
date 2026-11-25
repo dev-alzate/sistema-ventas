@@ -10,6 +10,11 @@ export function formatearPesos(valor) {
   return signo + '$' + formatearMiles(valor)
 }
 
+// N.º de venta para pantalla y recibo: local 1, número 124 → "L1-000124"
+export function formatearNumeroVenta(local, numero) {
+  return `L${local}-${String(numero).padStart(6, '0')}`
+}
+
 // Lo que el usuario escribe en un campo de dinero → número: "$50.000" → 50000
 export function leerPesos(texto) {
   return parseInt(String(texto).replace(/\D/g, ''), 10) || 0

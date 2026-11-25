@@ -86,9 +86,14 @@ Pantallas: Login · Punto de venta (productos 65% / carrito 35%, indicador de co
    - [x] Pantalla según `docs/diseno/2-punto-de-venta.html`: buscador, cuadrícula, carrito, efectivo, cambio/falta, botones rápidos, reloj y estado de conexión
    - [x] `crearVenta()` arma la venta con UUID y las columnas de la base; la confirmación del cobro es provisional (se reemplaza por el recibo en el paso 5)
    - [x] `05_productos_prueba.sql` ejecutado y probado con los locales
-   - Pendiente para el paso 6: número de venta, guardar en Dexie y sincronizar (hoy la venta cobrada no se guarda)
 5. [ ] Recibo PDF
-6. [ ] Guardado sin internet y sincronización
+6. [x] Guardado sin internet y sincronización (se hace antes que el 5 para que el recibo tenga n.º de venta)
+   - [x] Dexie (`lib/db.js`): ventas con sus items, copia de productos y contador de n.º de venta por local
+   - [x] Al cobrar: `guardarVenta()` asigna el n.º y guarda como `pendiente`; luego intenta enviar
+   - [x] `lib/sincronizacion.js`: upsert con `ignoreDuplicates` (sin duplicados), estados pendiente/enviada/fallida; se envía al abrir, al volver internet, cada minuto y tras cada cobro
+   - [x] `ajustarContador()` sube el contador al último n.º de Supabase (equipo nuevo o datos borrados)
+   - [x] Indicador "Sin conexión · N ventas guardadas" y aviso al cerrar sesión con ventas sin enviar
+   - [x] Probado con local1: las ventas llegan a Supabase
 7. [ ] Cierre de caja
 8. [ ] Panel del admin: ventas, cuadre, exportar y borrar
 9. [ ] Gestión de productos e importación de Excel

@@ -1,6 +1,6 @@
 import Boton from '../Boton'
 import { IconoCheck } from '../Iconos'
-import { formatearPesos } from '../../utils/formato'
+import { formatearNumeroVenta, formatearPesos } from '../../utils/formato'
 
 // PROVISIONAL: confirmación del cobro. En el paso 5 se reemplaza por la vista previa del recibo.
 export default function CobroRealizado({ venta, alCerrar }) {
@@ -19,10 +19,11 @@ export default function CobroRealizado({ venta, alCerrar }) {
           </span>
           <div>
             <h2 id="cobro-titulo" className="text-lg font-bold">
-              Cobro realizado
+              Venta registrada
             </h2>
-            <span className="text-sm text-texto-sec">
-              {unidades} {unidades === 1 ? 'artículo' : 'artículos'}
+            <span className="text-sm text-texto-sec tabular-nums">
+              N.º {formatearNumeroVenta(venta.local, venta.numero)} · {unidades}{' '}
+              {unidades === 1 ? 'artículo' : 'artículos'}
             </span>
           </div>
         </div>
