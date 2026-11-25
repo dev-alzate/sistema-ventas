@@ -89,6 +89,12 @@ export const IconoImpresora = (p) => (
   </Icono>
 )
 
+export const IconoCheck = (p) => (
+  <Icono grosor={2.5} {...p}>
+    <path d="M20 6 9 17l-5-5" />
+  </Icono>
+)
+
 export const IconoCarrito = (p) => (
   <Icono {...p}>
     <circle cx="9" cy="20" r="1.5" />
