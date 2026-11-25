@@ -36,6 +36,13 @@ App web de punto de venta para registrar ventas en efectivo en dos locales. Inst
 - RLS: cada local solo puede insertar y leer sus propias ventas y cierres; el admin puede leer todo y borrar.
 - Variables de entorno en `.env.local` (Vite la ignora en git): `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY` (clave publishable `sb_publishable_…`; las claves anon legacy se retiran en 2027). Nunca usar la `sb_secret_…` en el frontend.
 
+## Flujo de Git
+- `main`: versión estable. `develop`: integración; es la rama que se despliega en Vercel.
+- Cada tarea en su rama, creada desde `develop`: `feature/…` (funcionalidad), `fix/…` (corrección), `docs/…`, `chore/…`. Ejemplo: `feature/paso-5-recibo`.
+- Al terminar: comprobar que cada commit compila, unir a `develop` con `git merge --no-ff` y hacer push de `develop`. Borrar la rama local.
+- `develop` se une a `main` solo cuando el usuario lo pide.
+- Commits con Conventional Commits en español: `tipo(scope): descripción en imperativo` (`feat`, `fix`, `docs`, `refactor`, `test`, `chore`), un commit por cambio lógico.
+
 ## Estructura de `src/`
 ```
 components/   piezas reutilizables (botones, tarjetas, carrito)
@@ -74,7 +81,12 @@ Pantallas: Login · Punto de venta (productos 65% / carrito 35%, indicador de co
    - [x] Sesión y perfil (`ProveedorAuth`, `useAuth`, `lib/auth.js`; el perfil se guarda en el equipo para abrir sin internet)
    - [x] Login con usuario (`local1` → `local1@sistema-ventas.local`), rutas `/login`, `/local`, `/admin` protegidas por rol
    - [x] Probado con los 3 usuarios reales
-4. [ ] Punto de venta: productos de prueba, carrito y cobro
+4. [x] Punto de venta: productos de prueba, carrito y cobro
+   - [x] `supabase/05_productos_prueba.sql` (12 productos del diseño)
+   - [x] Pantalla según `docs/diseno/2-punto-de-venta.html`: buscador, cuadrícula, carrito, efectivo, cambio/falta, botones rápidos, reloj y estado de conexión
+   - [x] `crearVenta()` arma la venta con UUID y las columnas de la base; la confirmación del cobro es provisional (se reemplaza por el recibo en el paso 5)
+   - [x] `05_productos_prueba.sql` ejecutado y probado con los locales
+   - Pendiente para el paso 6: número de venta, guardar en Dexie y sincronizar (hoy la venta cobrada no se guarda)
 5. [ ] Recibo PDF
 6. [ ] Guardado sin internet y sincronización
 7. [ ] Cierre de caja
